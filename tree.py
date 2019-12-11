@@ -22,6 +22,12 @@ class Tree:
 
 
 directory = "."
+# FIXME :
+# when arguments passed with / at end `os.path.basename(path)
+# prints nothings as basename is an empty string e.g. home/dir/
+#
+# TODO : Options to follow symlinks or not
+# Currently no method for symlinks
 
 if len(sys.argv) > 1:
     directory = sys.argv[1]
