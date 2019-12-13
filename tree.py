@@ -68,6 +68,7 @@ directory = "."
 # TODO : Options to follow symlinks or not
 # Currently no method for symlinks
 
+
 if len(sys.argv) > 1:
     directory = sys.argv[1]
     print(directory)
