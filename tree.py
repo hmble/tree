@@ -1,11 +1,15 @@
 import os
 import sys
+from collections import OrderedDict
+
 
 class Tree:
-
     def __init__(self):
         self.dircount = 0
         self.filecount = 0
+        self.dict_dir = []
+        self.dict_file = []
+        self.ignore = [".git", "AW_Dribble"]
 
     def walk(self, path, prefix=""):
 
@@ -19,6 +23,41 @@ class Tree:
             else:
                 self.filecount += 1
                 print(prefix + "|-- " + entry.name)
+
+    def sorted_walk(self, path, prefix=""):
+
+        dirlist = OrderedDict()
+        filelist = []
+
+        for entry in os.scandir(path):
+
+            if entry.is_dir():
+                self.dircount += 1
+                dirlist[entry.name] = entry.path
+            else:
+                self.filecount += 1
+                filelist.append(entry.name)
+
+        fl = sorted(filelist)
+        for file in fl:
+
+            if file != fl[-1]:
+                print(prefix + "|-- " + file)
+            else:
+                print(prefix + "`-- " + file)
+
+        lt = (list(dirlist.keys()))
+        for key in dirlist.keys():
+            if (key in self.ignore):
+                continue
+            elif key != lt[-1]:
+                print(prefix + "|-- " + key)
+                newstr = prefix + "|   "
+                self.sorted_walk(dirlist[key], newstr)
+            else:
+                print(prefix + "`-- " + key)
+                newstr = prefix + "|   "
+                self.sorted_walk(dirlist[key], newstr)
 
 
 directory = "."
@@ -36,7 +75,6 @@ else:
     print(os.getcwd())
 
 tree = Tree()
-tree.walk(directory)
-
-print("\ndirectories " + str(tree.dircount) + ", files " + str(tree.filecount))
-
+# tree.walk(directory)
+tree.sorted_walk(directory)
+#print("\ndirectories " + str(tree.dircount) + ", files " + str(tree.filecount))
